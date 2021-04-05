@@ -9,6 +9,8 @@ import java.awt.event.KeyEvent;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
+
+
 public class BrowserUtil extends Initiate{
 	public void openBrowser(String browserToOpen) {
 		try {

@@ -24,4 +24,7 @@ public class Initiate {
 	public static String locatorSheetName = "Elements";
 	public static String testCasePath = "C:\\Users\\sachin\\Downloads\\TestScript.xlsx";
 	public static String testCaseSheetName = "Script";
+	
+	public static String log4jConfPath = "log4j.properties";
+	
 }
