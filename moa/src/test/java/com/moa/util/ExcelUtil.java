@@ -158,10 +158,10 @@ public class ExcelUtil extends Initiate{
 		try {
 			//Sheet sheet = this.CaptureExcelSheetToRead(sheetName);
 			rowLoc = sheet.getRow(row);
-			for(int colIndex = 0; colIndex <= endCol - 1 ; colIndex++) {
+			for(int colIndex = 0; colIndex <= endCol ; colIndex++) {
 				cellLoc = rowLoc.getCell(beginCol + colIndex);
 				value[0][colIndex] = this.CaptureExcelCellValueToRead(cellLoc);
-				//System.out.println("value[0][" +colIndex  + "]" + value[0][colIndex]);
+//				System.out.println("value[0][" +colIndex  + "]" + value[0][colIndex]);
 			}
 		}catch(Exception ex) {
 			ex.printStackTrace();

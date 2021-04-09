@@ -7,6 +7,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 
 import com.moa.model.Element;
 import com.moa.model.TestStep;
+import com.moa.model.TestSuite;
 
 public class TestUtil extends Initiate{
 	ExcelUtil excelUtil = new ExcelUtil();
@@ -69,5 +70,25 @@ public class TestUtil extends Initiate{
 			testStep = testScript.get(stepIndex);
 			this.runTestStep(testStep);
 		}
+	}
+	//Read test suite from Excel Sheet
+	public List<TestSuite> GetTestSuite(String test_suite_path, String test_suite_sheet) {
+		String eachStep[][] = new String[1][5];
+		List<TestSuite> testSuiteList = new ArrayList<TestSuite>();
+		int beginRow = 2;
+		int beginCol = 0;
+		int endRow;
+		int endCol = 4;			
+		
+		excelUtil.CaptureExcelFileToRead(test_suite_path);
+		Sheet sheet = excelUtil.CaptureExcelSheetToRead(test_suite_sheet);
+		endRow = Integer.parseInt(excelUtil.CaptureExcelCellValueToRead(sheet, 0, 1)) - 1;
+		for(int stepIndex = 0; stepIndex <= endRow - beginRow; stepIndex++) {
+			int tempRow = stepIndex + beginRow;
+			eachStep = excelUtil.CaptureExcelRowValueToRead(sheet, tempRow, beginCol, endCol);
+			testSuiteList.add(new TestSuite(eachStep));
+		}
+//		System.out.println("testSuiteList: " + testSuiteList.indexOf(2));
+		return testSuiteList;
 	}
 }
