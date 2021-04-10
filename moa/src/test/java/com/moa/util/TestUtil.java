@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import com.moa.model.Element;
+import com.moa.model.ObjectRepo;
+import com.moa.model.TestScript;
 import com.moa.model.TestStep;
 import com.moa.model.TestSuite;
 
@@ -71,6 +73,52 @@ public class TestUtil extends Initiate{
 			this.runTestStep(testStep);
 		}
 	}
+
+	//Read Object Repo from Excel Sheet
+	public List<ObjectRepo> GetObjectRepo(String Object_Repo_path, String Object_Repo_sheet) {
+		String eachStep[][] = new String[1][4];
+		List<ObjectRepo> objectRepoList = new ArrayList<ObjectRepo>();
+		int beginRow = 2;
+		int beginCol = 0;
+		int endRow;
+		int endCol = 3;			
+		try {
+		excelUtil.CaptureExcelFileToRead(Object_Repo_path);
+		Sheet sheet = excelUtil.CaptureExcelSheetToRead(Object_Repo_sheet);
+		endRow = Integer.parseInt(excelUtil.CaptureExcelCellValueToRead(sheet, 0, 1)) - 1;
+		for(int stepIndex = 0; stepIndex <= endRow - beginRow; stepIndex++) {
+			int tempRow = stepIndex + beginRow;
+			eachStep = excelUtil.CaptureExcelRowValueToRead(sheet, tempRow, beginCol, endCol);
+			objectRepoList.add(new ObjectRepo(eachStep));
+		}
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		return objectRepoList;
+	}
+	
+	//Read test Case from Excel Sheet
+	public List<TestScript> GetTestCase(String test_case_path, String test_case_sheet) {
+		String eachStep[][] = new String[1][4];
+		List<TestScript> testScriptList = new ArrayList<TestScript>();
+		int beginRow = 2;
+		int beginCol = 0;
+		int endRow;
+		int endCol = 3;			
+		try {
+		excelUtil.CaptureExcelFileToRead(test_case_path);
+		Sheet sheet = excelUtil.CaptureExcelSheetToRead(test_case_sheet);
+		endRow = Integer.parseInt(excelUtil.CaptureExcelCellValueToRead(sheet, 0, 1)) - 1;
+		for(int stepIndex = 0; stepIndex <= endRow - beginRow; stepIndex++) {
+			int tempRow = stepIndex + beginRow;
+			eachStep = excelUtil.CaptureExcelRowValueToRead(sheet, tempRow, beginCol, endCol);
+			testScriptList.add(new TestScript(eachStep));
+		}
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		return testScriptList;
+	}
 	//Read test suite from Excel Sheet
 	public List<TestSuite> GetTestSuite(String test_suite_path, String test_suite_sheet) {
 		String eachStep[][] = new String[1][5];
@@ -79,7 +127,7 @@ public class TestUtil extends Initiate{
 		int beginCol = 0;
 		int endRow;
 		int endCol = 4;			
-		
+		try {
 		excelUtil.CaptureExcelFileToRead(test_suite_path);
 		Sheet sheet = excelUtil.CaptureExcelSheetToRead(test_suite_sheet);
 		endRow = Integer.parseInt(excelUtil.CaptureExcelCellValueToRead(sheet, 0, 1)) - 1;
@@ -88,7 +136,9 @@ public class TestUtil extends Initiate{
 			eachStep = excelUtil.CaptureExcelRowValueToRead(sheet, tempRow, beginCol, endCol);
 			testSuiteList.add(new TestSuite(eachStep));
 		}
-//		System.out.println("testSuiteList: " + testSuiteList.indexOf(2));
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
 		return testSuiteList;
 	}
 }
