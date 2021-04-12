@@ -1,43 +1,47 @@
 package com.moa.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.poi.ss.usermodel.Sheet;
 
-import com.moa.model.Element;
 import com.moa.model.ObjectRepo;
 import com.moa.model.TestScript;
 import com.moa.model.TestStep;
 import com.moa.model.TestSuite;
 
+import org.w3c.dom.Element;
+
 public class TestUtil extends Initiate{
 	ExcelUtil excelUtil = new ExcelUtil();
 	SeleniumUtil seleniumUtil = new SeleniumUtil();
+	XMLUtil xmlUtil = new XMLUtil();
 	
-	public Element findElement(String searchKey){
-		String elementGroup[][] = new String[1][6];
-		int beginRow = 1;
-		int beginCol = 1;
-		int endRow;
-		int endCol = 6;	
-		try {
-			excelUtil.CaptureExcelFileToRead(locatorPath);
-			Sheet sheet = excelUtil.CaptureExcelSheetToRead(locatorSheetName);
-			endRow = Integer.parseInt(excelUtil.CaptureExcelCellValueToRead(sheet, 0, 2)) + 1;
-			for(int searchIndex = 0; searchIndex <= endRow - beginRow; searchIndex++) {
-				int tempRow = searchIndex + beginRow;
-				String tempElement = excelUtil.CaptureExcelCellValueToRead(sheet, searchIndex + beginRow, 2);
-				if(tempElement.equalsIgnoreCase(searchKey)) {
-					elementGroup = excelUtil.CaptureExcelRowValueToRead(sheet, tempRow, beginCol, endCol);
-				}
-			}
-		}catch(Exception ex) {
-			ex.printStackTrace();
-		}
-		
-		return new Element(elementGroup);
-	}
+//	public Element findElement(String searchKey){
+//		String elementGroup[][] = new String[1][6];
+//		int beginRow = 1;
+//		int beginCol = 1;
+//		int endRow;
+//		int endCol = 6;	
+//		try {
+//			excelUtil.CaptureExcelFileToRead(locatorPath);
+//			Sheet sheet = excelUtil.CaptureExcelSheetToRead(locatorSheetName);
+//			endRow = Integer.parseInt(excelUtil.CaptureExcelCellValueToRead(sheet, 0, 2)) + 1;
+//			for(int searchIndex = 0; searchIndex <= endRow - beginRow; searchIndex++) {
+//				int tempRow = searchIndex + beginRow;
+//				String tempElement = excelUtil.CaptureExcelCellValueToRead(sheet, searchIndex + beginRow, 2);
+//				if(tempElement.equalsIgnoreCase(searchKey)) {
+//					elementGroup = excelUtil.CaptureExcelRowValueToRead(sheet, tempRow, beginCol, endCol);
+//				}
+//			}
+//		}catch(Exception ex) {
+//			ex.printStackTrace();
+//		}
+//		
+//		return new Element(elementGroup);
+//	}
 	
 	public List<TestStep> getTestCase(){
 		String eachStep[][] = new String[1][5];
@@ -60,20 +64,20 @@ public class TestUtil extends Initiate{
 		}
 		return testScript;
 	}
-	public void runTestStep(TestStep testStep) {
-		Element primaryElement = this.findElement(testStep.primaryElement);
-		Element secondaryElement = this.findElement(testStep.secondaryElement);
-		seleniumUtil.runCommand(testStep.primaryAction, primaryElement.attributeFinder, primaryElement.attributeValue, testStep.valueToEnter, secondaryElement.attributeFinder, secondaryElement.attributeValue);
-	}
-	public void runTestScript() {
-		List<TestStep> testScript = this.getTestCase();
-		TestStep testStep;
-		for(int stepIndex = 0; stepIndex < testScript.size(); stepIndex++) {
-			testStep = testScript.get(stepIndex);
-			this.runTestStep(testStep);
-		}
-	}
-
+//	public void runTestStep(TestStep testStep) {
+//		Element primaryElement = this.findElement(testStep.primaryElement);
+//		Element secondaryElement = this.findElement(testStep.secondaryElement);
+//		seleniumUtil.runCommand(testStep.primaryAction, primaryElement.attributeFinder, primaryElement.attributeValue, testStep.valueToEnter, secondaryElement.attributeFinder, secondaryElement.attributeValue);
+//	}
+//	public void runTestScript() {
+//		List<TestStep> testScript = this.getTestCase();
+//		TestStep testStep;
+//		for(int stepIndex = 0; stepIndex < testScript.size(); stepIndex++) {
+//			testStep = testScript.get(stepIndex);
+//			this.runTestStep(testStep);
+//		}
+//	}
+//
 	//Read Object Repo from Excel Sheet
 	public List<ObjectRepo> GetObjectRepo(String Object_Repo_path, String Object_Repo_sheet) {
 		String eachStep[][] = new String[1][4];
@@ -141,4 +145,23 @@ public class TestUtil extends Initiate{
 		}
 		return testSuiteList;
 	}
+	public void GenerateXMLTestSuite(List<TestSuite> test_suite_list, String xmlFilePath) {
+		HashMap<String, UUID> testSuiteMap = new HashMap<String, UUID>();
+		for(TestSuite testSuite: test_suite_list) {
+			if(testSuiteMap.get(testSuite.testSuiteName) == null) {
+				testSuiteMap.put(testSuite.testSuiteName, UUID.randomUUID());
+			}
+			
+			xmlUtil.CreateDocument();
+			Element rootElement = xmlUtil.CreateRootElement(testSuite.testSuiteName);
+			xmlUtil.setElementAttribute(rootElement, "id", testSuiteMap.get(testSuite.testSuiteName).toString());
+			Element childElement = xmlUtil.CreateChildElement(rootElement, testSuite.testSuiteAnnotation);
+			xmlUtil.CreateChildElement(childElement, "TestScriptPath", testSuite.testScriptPath);
+			xmlUtil.CreateChildElement(childElement, "TestCaseSheetName", testSuite.testCaseSheetName);
+			xmlUtil.CreateChildElement(childElement, "Description", testSuite.description);
+			xmlUtil.CreateXMLFile(xmlFilePath);
+
+		}	
+	}	
 }
+
