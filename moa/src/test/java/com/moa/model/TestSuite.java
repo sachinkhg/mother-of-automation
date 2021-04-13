@@ -1,7 +1,7 @@
 package com.moa.model;
 
 public class TestSuite {
-
+	public String testSuiteID;
 	public String testSuiteName;
 	public String testSuiteAnnotation;
 	public String testScriptPath;
@@ -10,10 +10,12 @@ public class TestSuite {
 
 	//Constructor to Capture String to setValue
 	public TestSuite(String[][] eachStep) {
+		
 		testSuiteName = eachStep[0][0];
 		testSuiteAnnotation = eachStep[0][1];
 		testScriptPath = eachStep[0][2];
 		testCaseSheetName = eachStep[0][3];
 		description = eachStep[0][4];
+		testSuiteID = eachStep[0][5];
 	}
 }
