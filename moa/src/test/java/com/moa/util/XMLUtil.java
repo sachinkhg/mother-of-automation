@@ -14,11 +14,13 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class XMLUtil {
 	public Document document;
 	
-	public void CreateDocument() {
+	public Document CreateDocument() {
         try {
 			DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
@@ -27,12 +29,14 @@ public class XMLUtil {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+        return document;
 	}
 	
 	public Element CreateRootElement(String root_element_name) {
         Element element = document.createElement(root_element_name);
         document.appendChild(element);
         return element;
+        
 	}
 	public Element CreateChildElement(Element parent_element, String child_element_name) {
         Element child_element = document.createElement(child_element_name);
@@ -47,10 +51,11 @@ public class XMLUtil {
         parent_element.appendChild(child_element);
        
 	}
-	public void setElementAttribute(Element element, String attr_name, String attr_value) {
+	public Attr setElementAttribute(Element element, String attr_name, String attr_value) {
         Attr attr = document.createAttribute(attr_name);
         attr.setValue(attr_value);
         element.setAttributeNode(attr);
+        return attr;
 	}
 	
 	public void CreateXMLFile(String xmlFilePath) {
@@ -67,7 +72,24 @@ public class XMLUtil {
 	    }
 	}
 	
-	
+	public void GetElement(String xmlFilePath, String id) {
+		try {
+		File file = new File(xmlFilePath);
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();   
+		DocumentBuilder db = dbf.newDocumentBuilder();  
+		Document doc = db.parse(file);  
+		doc.getDocumentElement().normalize();  
+		System.out.println("Root element: " + doc.getElementById("id"));  
+		NodeList nList = doc.getElementsByTagName("TestSuite");
+		
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+	        Node nNode = nList.item(temp);
+	        System.out.println("\nCurrent Element :" + nNode.getNodeName());
+		}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public void CreateXMLFileExample(String xmlFilePath) {
 			CreateDocument();

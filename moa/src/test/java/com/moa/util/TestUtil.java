@@ -1,7 +1,9 @@
 package com.moa.util;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -146,11 +148,18 @@ public class TestUtil extends Initiate{
 				eachStep = excelUtil.CaptureExcelRowValueToRead(sheet, tempRow, beginCol, endCol);
 				String[][] step = AddTestSuiteIDtoEachStep(eachStep);
 				testSuiteList.add(new TestSuite(step));
+				
 			}
 		}catch(Exception ex) {
 				ex.printStackTrace();
 		}
+		System.out.println(testSuiteIDMap);
 		return testSuiteList;
+	}
+	
+	public void ArrangeTestSuite(List<TestSuite> testSuiteList) {
+		int count = testSuiteList.size();
+		
 	}
 	
 	private String[][] AddTestSuiteIDtoEachStep(String[][] eachStep) {
@@ -174,7 +183,7 @@ public class TestUtil extends Initiate{
 		Element rootElement = null;
 		Attr attr;
 		Document document = xmlUtil.CreateDocument();
-		rootElement = xmlUtil.CreateRootElement("TestSuite");
+		rootElement = xmlUtil.CreateRootElement("TestSuites");
 		for(TestSuite testSuite: test_suite_list) {
 			
 //			if(document.getElementById(testSuite.testSuiteID)==null) {
@@ -183,16 +192,17 @@ public class TestUtil extends Initiate{
 //				rootElement.setIdAttributeNode(attr, true);
 //				System.out.println(document.getElementById(testSuite.testSuiteID));
 //			}
-			Element childElement = xmlUtil.CreateChildElement(rootElement, testSuite.testSuiteAnnotation);
+			Element childElement = xmlUtil.CreateChildElement(rootElement, "TestSuite");
 			attr = xmlUtil.setElementAttribute(childElement, "id", testSuite.testSuiteID);
 			xmlUtil.CreateChildElement(childElement, "TestSuiteName", testSuite.testSuiteName);
+			xmlUtil.CreateChildElement(childElement, "TestSuiteAnnotation", testSuite.testSuiteAnnotation);
 			xmlUtil.CreateChildElement(childElement, "TestScriptPath", testSuite.testScriptPath);
 			xmlUtil.CreateChildElement(childElement, "TestCaseSheetName", testSuite.testCaseSheetName);
 			xmlUtil.CreateChildElement(childElement, "Description", testSuite.description);
-
+			xmlUtil.CreateXMLFile(xmlFilePath);
 
 		}
-		xmlUtil.CreateXMLFile(xmlFilePath);
+		
 	}	
 }
 
