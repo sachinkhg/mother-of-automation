@@ -130,13 +130,14 @@ public class TestUtil extends Initiate{
 	}
 	//Read test suite from Excel Sheet
 	public List<TestSuite> GetTestSuite(String test_suite_path, String test_suite_sheet) {
-		String eachStep[][] = new String[1][5];
+		String eachStep[][];
 		List<TestSuite> testSuiteList = new ArrayList<TestSuite>();
 		
+		//need to fetch these from hiddensheet
 		int beginRow = 2;
 		int beginCol = 0;
 		int endRow;
-		int endCol = 4;		
+		int endCol = 5;
 		
 		try {
 			excelUtil.CaptureExcelFileToRead(test_suite_path);
@@ -146,8 +147,8 @@ public class TestUtil extends Initiate{
 			for(int stepIndex = 0; stepIndex <= endRow - beginRow; stepIndex++) {
 				int tempRow = stepIndex + beginRow;
 				eachStep = excelUtil.CaptureExcelRowValueToRead(sheet, tempRow, beginCol, endCol);
-				String[][] step = AddTestSuiteIDtoEachStep(eachStep);
-				testSuiteList.add(new TestSuite(step));
+				eachStep = AddTestSuiteIDtoEachStep(eachStep);
+				testSuiteList.add(new TestSuite(eachStep));
 				
 			}
 		}catch(Exception ex) {
@@ -164,20 +165,22 @@ public class TestUtil extends Initiate{
 	
 	private String[][] AddTestSuiteIDtoEachStep(String[][] eachStep) {
 		eachStep[0][0] = eachStep[0][0].replaceAll(" ", "");
-		String step[][] = new String[1][6];
+		String step[][] = new String[1][7];
 		if(testSuiteIDMap.get(eachStep[0][0]) == null) {
-			step[0][5] = UUID.randomUUID().toString();
-			testSuiteIDMap.put(eachStep[0][0], step[0][5]);			
+			step[0][0] = UUID.randomUUID().toString();
+			testSuiteIDMap.put(eachStep[0][0], step[0][0]);			
 		}else {
-			step[0][5] = testSuiteIDMap.get(eachStep[0][0]);
+			step[0][0] = testSuiteIDMap.get(eachStep[0][0]);
 		}
-		step[0][0] = eachStep[0][0];
-		step[0][1] = eachStep[0][1];
-		step[0][2] = eachStep[0][2];
-		step[0][3] = eachStep[0][3];
-		step[0][4] = eachStep[0][4];
+		step[0][1] = eachStep[0][0];
+		step[0][2] = eachStep[0][1];
+		step[0][3] = eachStep[0][2];
+		step[0][4] = eachStep[0][3];
+		step[0][5] = eachStep[0][4];
+		step[0][6] = eachStep[0][5];		
 		return step;
 	}
+	
 	public void GenerateXMLTestSuite(List<TestSuite> test_suite_list, String xmlFilePath) {
 		
 		Element rootElement = null;
@@ -200,7 +203,7 @@ public class TestUtil extends Initiate{
 			xmlUtil.CreateChildElement(childElement, "TestCaseSheetName", testSuite.testCaseSheetName);
 			xmlUtil.CreateChildElement(childElement, "Description", testSuite.description);
 			xmlUtil.CreateXMLFile(xmlFilePath);
-
+		
 		}
 		
 	}	
