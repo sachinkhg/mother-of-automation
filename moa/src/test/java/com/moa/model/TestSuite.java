@@ -7,17 +7,31 @@ public class TestSuite {
 	public String testScriptPath;
 	public String testCaseSheetName;
 	public String description;
-	public String toRun;
-
-	//Constructor to Capture String to setValue
-	public TestSuite(String[][] eachStep) {
-		testSuiteID = eachStep[0][0];
-		testSuiteName = eachStep[0][1];
-		testSuiteAnnotation = eachStep[0][2];
-		testScriptPath = eachStep[0][3];
-		testCaseSheetName = eachStep[0][4];
-		description = eachStep[0][5];
-		toRun = eachStep[0][6];
-	}
+	public String dataProvider;
+	public String alwaysRun;
+	public String groups;
+	public String dependsOnGroup;
+	public String priority;
+	public String timeOut;
+	public String ExpectedExceptions;
+	public String enable;
 	
+
+	//Constructor to Capture testSuiteStep to setValue
+	public TestSuite(TestSuiteStep testSuiteStep) {
+		 testSuiteID = testSuiteStep.testSuiteID;
+		 testSuiteName = testSuiteStep.testSuiteName;
+		 testSuiteAnnotation = testSuiteStep.testSuiteAnnotation;
+		 testScriptPath = testSuiteStep.testScriptPath;
+		 testCaseSheetName = testSuiteStep.testCaseSheetName;
+		 description = testSuiteStep.description;
+		 dataProvider = testSuiteStep.dataProvider;
+		 alwaysRun = testSuiteStep.alwaysRun;
+		 groups = testSuiteStep.groups;
+		 dependsOnGroup = testSuiteStep.dependsOnGroup;
+		 priority = testSuiteStep.priority;
+		 timeOut = testSuiteStep.timeOut;
+		 ExpectedExceptions = testSuiteStep.ExpectedExceptions;
+		 enable = testSuiteStep.enable;
+	}
 }
